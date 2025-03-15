@@ -1,11 +1,7 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { GameState, Player, GameMode, Move } from "../types";
-
-interface Players {
-  X: string;
-  O: string;
-}
+import { create, StateCreator } from "zustand";
+import { persist, PersistOptions } from "zustand/middleware";
+import { GameState, Player, GameMode, Move, Board } from "@tictactoe/types";
+import { calculateWinner, computerMove } from "@tictactoe/utils";
 
 const initialState: GameState = {
   board: Array(9).fill(null),
@@ -25,88 +21,40 @@ const initialState: GameState = {
   },
 };
 
-const calculateWinner = (board: (Player | null)[]): Player | "draw" | null => {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8], // Rows
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8], // Columns
-    [0, 4, 8],
-    [2, 4, 6], // Diagonals
-  ];
-
-  for (const combo of lines) {
-    const [a, b, c] = combo;
-    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      return board[a] as Player;
-    }
-  }
-
-  if (board.every((cell) => cell !== null)) {
-    return "draw";
-  }
-
-  return null;
+type GameStore = GameState & {
+  setGameMode: (mode: GameMode) => void;
+  setPlayers: (players: { X: string; O: string }) => void;
+  makeMove: (position: number) => void;
+  undoMove: () => void;
+  resetGame: () => void;
+  setFirstLaunch: (value: boolean) => void;
+  setHasGameStarted: (value: boolean) => void;
+  updateTimer: (player: Player) => void;
 };
 
-const computerMove = (board: (Player | null)[]): number => {
-  const availablePositions = board
-    .map((cell, index) => (cell === null ? index : -1))
-    .filter((pos) => pos !== -1);
+type GamePersist = (
+  config: StateCreator<GameStore>,
+  options: PersistOptions<GameStore>
+) => StateCreator<GameStore>;
 
-  return availablePositions[
-    Math.floor(Math.random() * availablePositions.length)
-  ];
+const handleComputerMove = (
+  board: Board,
+  makeMove: (position: number) => void
+) => {
+  const position = computerMove(board);
+  const index = position.row * 3 + position.col;
+  makeMove(index);
 };
 
-export const useGameStore = create<
-  GameState & {
-    makeMove: (position: number) => void;
-    undoMove: () => void;
-    resetGame: () => void;
-    setGameMode: (mode: GameMode) => void;
-    setPlayerName: (player: Player, name: string) => void;
-    setFirstLaunch: (value: boolean) => void;
-    setHasGameStarted: (value: boolean) => void;
-    updateTimer: (player: Player) => void;
-    resetTimer: () => void;
-  }
->()(
-  persist(
+export const useGameStore = create<GameStore>()(
+  (persist as GamePersist)(
     (set, get) => ({
       ...initialState,
 
-      setGameMode: (mode) => set({ gameMode: mode }),
+      setGameMode: (mode: GameMode) =>
+        set({ gameMode: mode, winner: null, board: Array(9).fill(null) }),
 
-      setPlayerName: (player, name) =>
-        set((state) => ({
-          players: {
-            ...state.players,
-            [player]: name,
-          },
-        })),
-
-      setFirstLaunch: (value) => set({ isFirstLaunch: value }),
-
-      setHasGameStarted: (value) => set({ hasGameStarted: value }),
-
-      updateTimer: (player) =>
-        set((state) => ({
-          timer: {
-            ...state.timer,
-            [player]: state.timer[player] + 1,
-          },
-        })),
-
-      resetTimer: () =>
-        set({
-          timer: {
-            X: 0,
-            O: 0,
-          },
-        }),
+      setPlayers: (players: { X: string; O: string }) => set({ players }),
 
       makeMove: (position: number) => {
         const state = get();
@@ -117,10 +65,14 @@ export const useGameStore = create<
         const newBoard = [...state.board];
         newBoard[position] = state.currentPlayer;
 
-        const newMove = {
+        const newMove: Move = {
           player: state.currentPlayer,
-          position,
+          position: {
+            row: Math.floor(position / 3),
+            col: position % 3,
+          },
           timestamp: Date.now(),
+          board: [...newBoard],
         };
 
         set({
@@ -137,8 +89,7 @@ export const useGameStore = create<
           state.currentPlayer === "X"
         ) {
           setTimeout(() => {
-            const computerPosition = computerMove(newBoard);
-            get().makeMove(computerPosition);
+            handleComputerMove(newBoard, get().makeMove);
           }, 500);
         }
       },
@@ -152,7 +103,7 @@ export const useGameStore = create<
 
         const newBoard = Array(9).fill(null);
         newMoves.forEach((move) => {
-          newBoard[move.position] = move.player;
+          newBoard[move.position.row * 3 + move.position.col] = move.player;
         });
 
         set({
@@ -175,6 +126,18 @@ export const useGameStore = create<
             O: 0,
           },
         }),
+
+      setFirstLaunch: (value: boolean) => set({ isFirstLaunch: value }),
+
+      setHasGameStarted: (value: boolean) => set({ hasGameStarted: value }),
+
+      updateTimer: (player: Player) =>
+        set((state) => ({
+          timer: {
+            ...state.timer,
+            [player]: state.timer[player] + 1,
+          },
+        })),
     }),
     {
       name: "tic-tac-toe-storage",

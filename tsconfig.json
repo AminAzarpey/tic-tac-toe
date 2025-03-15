@@ -1,7 +1,14 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "extends": "./tsconfig.app.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@tictactoe/types": ["./src/types/index"],
+      "@tictactoe/store": ["./src/store/index"],
+      "@tictactoe/hooks": ["./src/hooks/index"],
+      "@tictactoe/components": ["./src/components/index"],
+      "@tictactoe/utils": ["./src/utils/index"]
+    }
+  }
 }

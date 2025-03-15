@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Cell as CellType } from "../types";
+import { Cell as CellType } from "@tictactoe/types";
 
 interface CellProps {
   value: CellType;

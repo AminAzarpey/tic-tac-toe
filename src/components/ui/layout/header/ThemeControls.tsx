@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { useThemeStore } from "../store/themeStore";
-import { Theme } from "../types";
+import { useThemeStore } from "@tictactoe/store";
+import { Theme } from "@tictactoe/types";
+import { baseColors } from "@tictactoe/utils";
 
 const ThemeControls = () => {
   const { isDarkMode, toggleDarkMode, setTheme } = useThemeStore();

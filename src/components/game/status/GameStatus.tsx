@@ -1,8 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useGameStore } from "../store/gameStore";
+import { useGameStore } from "@tictactoe/store";
+import { useTranslation } from "@tictactoe/hooks";
 
 const GameStatus = () => {
   const { winner, currentPlayer, players } = useGameStore();
+  const { t, language } = useTranslation();
 
   return (
     <AnimatePresence mode="wait">
@@ -15,12 +17,21 @@ const GameStatus = () => {
       >
         {winner ? (
           winner === "draw" ? (
-            <span>Game is a Draw!</span>
+            <span>{t("draw")}</span>
           ) : (
-            <span>{players[winner]} Wins! 🎉</span>
+            <span>
+              {language === "fa"
+                ? `${t("wins")} ${players[winner]}`
+                : `${players[winner]} ${t("wins")}`}{" "}
+              🎉
+            </span>
           )
         ) : (
-          <span>{players[currentPlayer]}'s Turn</span>
+          <span>
+            {language === "fa"
+              ? `${t("turn")} ${players[currentPlayer]}`
+              : `${players[currentPlayer]} ${t("turn")}`}
+          </span>
         )}
       </motion.div>
     </AnimatePresence>

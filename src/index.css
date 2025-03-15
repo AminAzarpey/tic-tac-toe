@@ -6,14 +6,13 @@
   :root {
     --color-primary: #3b82f6;
     --color-primary-rgb: 59, 130, 246;
-    --color-secondary: #10b981;
+    --color-secondary: #094fc2;
     --color-secondary-rgb: 16, 185, 129;
     --color-accent: #f59e0b;
     --color-accent-rgb: 245, 158, 11;
     --color-neutral: #6b7280;
     --color-neutral-rgb: 107, 114, 128;
-    --color-x: #1e40af;
-    --color-o: #fcd34d;
+    --color-background: #f5f2ef;
   }
 
   body {

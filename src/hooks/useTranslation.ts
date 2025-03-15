@@ -1,94 +1,86 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 type Language = "en" | "fa";
 
-interface TranslationState {
+type TranslationStore = {
   language: Language;
-  setLanguage: (language: Language) => void;
-}
+  setLanguage: (lang: Language) => void;
+  t: (key: string) => string;
+};
 
 const translations = {
   en: {
+    title: "Tic Tac Toe",
     welcomeToGame: "Welcome to Tic Tac Toe!",
     selectGameMode: "Select Game Mode",
-    "1v1": "1 vs 1",
-    vsComputer: "vs Computer",
     player1Name: "Player 1 Name",
     player2Name: "Player 2 Name",
     startGame: "Start Game",
-    gameHistory: "Game History",
-    move: "Move",
-    placedAt: "placed at position",
-    undo: "Undo",
-    noMoves: "No moves yet",
-    collapse: "Collapse",
-    expand: "Expand",
-    turn: "'s turn",
-    wins: "wins!",
-    draw: "It's a draw!",
-    reset: "Reset Game",
-    settings: "Settings",
+    gameMode: "Game Mode",
+    oneVsOne: "1 vs 1",
+    vsComputer: "vs Computer",
+    colorPalette: "Color Palette",
     language: "Language",
     english: "English",
     persian: "Persian",
-    theme: "Theme",
-    light: "Light",
-    dark: "Dark",
-    gameMode: "Game Mode",
-    colorPalette: "Color Palette",
-    primary: "Primary Color",
-    secondary: "Secondary Color",
-    accent: "Accent Color",
-    neutral: "Neutral Color",
-    cannotChangeGameMode: "Cannot change game mode while game is in progress",
+    settings: "Settings",
+    dark: "Dark Mode",
+    light: "Light Mode",
+    gameHistory: "Game History",
+    noMoves: "No moves yet",
+    move: "Move",
+    placedAt: "placed at position",
+    undo: "Undo",
+    reset: "Reset",
+    wins: "wins!",
+    draw: "It's a draw!",
+    turn: "'s turn",
+    cannotChangeGameMode: "Cannot change game mode during a game",
   },
   fa: {
-    welcomeToGame: "به بازی ایکس او خوش آمدید!",
-    selectGameMode: "انتخاب حالت بازی",
-    "1v1": "۱ در مقابل ۱",
-    vsComputer: "در مقابل کامپیوتر",
-    player1Name: "نام بازیکن ۱",
-    player2Name: "نام بازیکن ۲",
+    title: "دوز",
+    welcomeToGame: "به بازی دوز خوش آمدید!",
+    selectGameMode: "حالت بازی را انتخاب کنید",
+    player1Name: "نام بازیکن اول",
+    player2Name: "نام بازیکن دوم",
     startGame: "شروع بازی",
-    gameHistory: "تاریخچه بازی",
-    move: "حرکت",
-    placedAt: "در موقعیت",
-    undo: "برگشت",
-    noMoves: "هنوز حرکتی انجام نشده",
-    collapse: "بستن",
-    expand: "نمایش کامل",
-    turn: " نوبت",
-    wins: "برنده شد!",
-    draw: "بازی مساوی شد!",
-    reset: "شروع مجدد",
-    settings: "تنظیمات",
+    gameMode: "حالت بازی",
+    oneVsOne: "۱ در مقابل ۱",
+    vsComputer: "در مقابل کامپیوتر",
+    colorPalette: "پالت رنگ",
     language: "زبان",
     english: "انگلیسی",
     persian: "فارسی",
-    theme: "تم",
-    light: "روشن",
-    dark: "تاریک",
-    gameMode: "حالت بازی",
-    colorPalette: "پالت رنگ",
-    primary: "رنگ اصلی",
-    secondary: "رنگ ثانویه",
-    accent: "رنگ تاکیدی",
-    neutral: "رنگ خنثی",
+    settings: "تنظیمات",
+    dark: "حالت تاریک",
+    light: "حالت روشن",
+    gameHistory: "تاریخچه بازی",
+    noMoves: "هنوز حرکتی انجام نشده",
+    player: "بازیکن",
+    movedTo: "به موقعیت",
+    undo: "برگشت",
+    reset: "شروع مجدد",
+    wins: "برنده شد!",
+    draw: "مساوی شد!",
+    turn: "نوبت",
+    playerXName: "نام بازیکن X",
+    playerOName: "نام بازیکن O",
     cannotChangeGameMode: "در حین بازی نمی‌توان حالت بازی را تغییر داد",
   },
 };
 
-export const useTranslationStore = create<TranslationState>((set) => ({
-  language: "en",
-  setLanguage: (language) => set({ language }),
-}));
-
-export const useTranslation = () => {
-  const { language, setLanguage } = useTranslationStore();
-
-  const t = (key: keyof typeof translations.en) => {
-    return translations[language][key];
-  };
-
-  return { t, language, setLanguage };
-};
+export const useTranslation = create<TranslationStore>()(
+  persist(
+    (set, get) => ({
+      language: "en",
+      setLanguage: (lang) => set({ language: lang }),
+      t: (key) =>
+        translations[get().language][key as keyof typeof translations.en] ||
+        key,
+    }),
+    {
+      name: "language-storage",
+    }
+  )
+);

@@ -1,8 +1,8 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useTranslation } from "../hooks/useTranslation";
-import confetti from "canvas-confetti";
+import { motion } from "framer-motion";
+import { useTranslation } from "@tictactoe/hooks";
+import { Player } from "@tictactoe/types";
 import { useEffect } from "react";
-import { Player } from "../types";
+import { playWinAnimation, modalAnimations } from "@tictactoe/utils";
 
 interface WinnerModalProps {
   winner: Player | "draw" | null;
@@ -10,7 +10,7 @@ interface WinnerModalProps {
   onPlayAgain: () => void;
 }
 
-export const WinnerModal = ({
+const WinnerModal = ({
   winner,
   playerName,
   onPlayAgain,
@@ -19,31 +19,7 @@ export const WinnerModal = ({
 
   useEffect(() => {
     if (winner && winner !== "draw") {
-      const duration = 3000;
-      const end = Date.now() + duration;
-
-      const frame = () => {
-        confetti({
-          particleCount: 2,
-          angle: 60,
-          spread: 55,
-          origin: { x: 0 },
-          colors: ["#3B82F6", "#10B981", "#F59E0B"],
-        });
-        confetti({
-          particleCount: 2,
-          angle: 120,
-          spread: 55,
-          origin: { x: 1 },
-          colors: ["#3B82F6", "#10B981", "#F59E0B"],
-        });
-
-        if (Date.now() < end) {
-          requestAnimationFrame(frame);
-        }
-      };
-
-      frame();
+      playWinAnimation();
     }
   }, [winner]);
 
@@ -51,15 +27,11 @@ export const WinnerModal = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      {...modalAnimations.overlay}
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
+        {...modalAnimations.content}
         className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-xl max-w-md w-full mx-4 text-center"
       >
         {winner === "draw" ? (
@@ -81,3 +53,5 @@ export const WinnerModal = ({
     </motion.div>
   );
 };
+
+export default WinnerModal;

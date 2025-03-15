@@ -9,7 +9,7 @@ export default {
         secondary: "var(--color-secondary, #10B981)",
         accent: "var(--color-accent, #F59E0B)",
         neutral: "var(--color-neutral, #6B7280)",
-        background: "var(--color-background)",
+        background: "var(--color-background, #F5F2EF)",
       },
       fontFamily: {
         sans: ["Vazirmatn", "sans-serif"],
@@ -29,5 +29,19 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".rtl": {
+          direction: "rtl",
+          "text-align": "right",
+        },
+        ".ltr": {
+          direction: "ltr",
+          "text-align": "left",
+        },
+      };
+      addUtilities(newUtilities);
+    },
+  ],
 };
