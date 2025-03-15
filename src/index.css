@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #3b82f6;
+    --color-primary-rgb: 59, 130, 246;
+    --color-secondary: #10b981;
+    --color-secondary-rgb: 16, 185, 129;
+    --color-accent: #f59e0b;
+    --color-accent-rgb: 245, 158, 11;
+    --color-neutral: #6b7280;
+    --color-neutral-rgb: 107, 114, 128;
+    --color-x: #1e40af;
+    --color-o: #fcd34d;
+  }
+
+  body {
+    font-family: "Vazirmatn", sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white hover:opacity-80 transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-white hover:opacity-80 transition-colors;
+  }
+
+  .btn-accent {
+    @apply bg-accent text-white hover:opacity-80 transition-colors;
+  }
+
+  .input-primary {
+    @apply border-2 border-transparent focus:border-primary focus:ring-2 focus:ring-opacity-20 focus:ring-primary outline-none;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent;
+  }
+}
+
+/* Game Board */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  font-weight: bold;
+  background-color: rgba(var(--color-primary-rgb), 0.1);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cell:hover {
+  background-color: rgba(var(--color-primary-rgb), 0.2);
+  transform: scale(1.02);
+}
+
+.cell.x {
+  color: var(--color-x);
+  font-weight: 900;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.cell.o {
+  color: var(--color-o);
+  font-weight: 900;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Game History */
+.history-item {
+  @apply p-4 rounded-lg mb-2 transition-all;
+  background-color: rgba(var(--color-primary-rgb), 0.05);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.1);
+}
+
+.history-item:hover {
+  background-color: rgba(var(--color-primary-rgb), 0.1);
+  transform: translateX(4px);
+}
+
+.history-item span {
+  font-size: 1.1rem;
+}
+
+.history-item .font-bold {
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* RTL Support */
+[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
