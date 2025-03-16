@@ -1,5 +1,5 @@
-import { create, StateCreator } from "zustand";
-import { persist, PersistOptions } from "zustand/middleware";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { GameState, Player, GameMode, Move, Board } from "@tictactoe/types";
 import { calculateWinner, computerMove } from "@tictactoe/utils";
 
@@ -32,11 +32,6 @@ type GameStore = GameState & {
   updateTimer: (player: Player) => void;
 };
 
-type GamePersist = (
-  config: StateCreator<GameStore>,
-  options: PersistOptions<GameStore>
-) => StateCreator<GameStore>;
-
 const handleComputerMove = (
   board: Board,
   makeMove: (position: number) => void
@@ -47,7 +42,7 @@ const handleComputerMove = (
 };
 
 export const useGameStore = create<GameStore>()(
-  (persist as GamePersist)(
+  persist(
     (set, get) => ({
       ...initialState,
 

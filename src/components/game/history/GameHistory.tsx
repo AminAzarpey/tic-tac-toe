@@ -23,7 +23,7 @@ const GameHistory = () => {
       {[...moves].reverse().map((move, index) => (
         <div key={index} className="history-item">
           <span>
-            {t("player")}{" "}
+            {t("move")}{" "}
             <span
               className={`font-bold ${
                 move.player === "X" ? "text-primary" : "text-secondary"
@@ -31,7 +31,7 @@ const GameHistory = () => {
             >
               {move.player}
             </span>{" "}
-            {t("movedTo")}{" "}
+            {t("placedAt")}{" "}
             <span className="ltr inline-block">
               ({move.position.row + 1}, {move.position.col + 1})
             </span>
