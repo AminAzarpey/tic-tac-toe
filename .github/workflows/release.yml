@@ -24,7 +24,7 @@ jobs:
         run: npm run build
 
       - name: Create Release
-        uses: softprops/action-gh-release@v4
+        uses: softprops/action-gh-release@v1
         with:
           files: |
             dist/*
