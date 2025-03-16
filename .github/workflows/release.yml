@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:  # Enables manual trigger
 
 jobs:
   build:
@@ -15,16 +16,30 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-          cache: "npm"
+
+      - name: Cache Node Modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm install --force
+        run: npm install
 
       - name: Build
         run: npm run build
 
+      - name: Check if dist folder exists
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "dist folder does not exist, skipping release";
+            exit 1;
+          fi
+
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             dist/*
