@@ -1,42 +1,23 @@
-import { motion } from "framer-motion";
+import { useTranslation } from "@tictactoe/hooks";
 import { useThemeStore } from "@tictactoe/store";
-import { Theme } from "@tictactoe/types";
-import { baseColors } from "@tictactoe/utils";
+import { FiSun, FiMoon } from "react-icons/fi";
 
 const ThemeControls = () => {
-  const { isDarkMode, toggleDarkMode, setTheme } = useThemeStore();
-
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const color = e.target.value;
-    const theme: Theme = {
-      primary: color,
-      secondary: `${color}99`,
-      accent: `${color}cc`,
-      neutral: `${color}33`,
-      background: `${color}11`,
-    };
-    setTheme(theme);
-  };
+  const { isDarkMode, toggleDarkMode } = useThemeStore();
+  const { t } = useTranslation();
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex items-center gap-4 p-4 bg-background rounded-lg shadow-lg"
+    <button
+      onClick={toggleDarkMode}
+      className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+      aria-label={isDarkMode ? t("light") : t("dark")}
     >
-      <button
-        onClick={toggleDarkMode}
-        className="p-2 rounded-lg bg-neutral hover:bg-neutral/80 transition-colors duration-300"
-      >
-        {isDarkMode ? "🌞" : "🌙"}
-      </button>
-
-      <input
-        type="color"
-        onChange={handleColorChange}
-        className="w-10 h-10 rounded cursor-pointer"
-      />
-    </motion.div>
+      {isDarkMode ? (
+        <FiSun className="w-6 h-6 text-gray-800 dark:text-white" />
+      ) : (
+        <FiMoon className="w-6 h-6 text-gray-800 dark:text-white" />
+      )}
+    </button>
   );
 };
 

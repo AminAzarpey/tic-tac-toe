@@ -1,30 +1,38 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useGameStore } from "@tictactoe/store";
 import { useTranslation } from "@tictactoe/hooks";
 import { motion } from "framer-motion";
 import { formatTime } from "@tictactoe/utils";
 
 const GameTimer = () => {
-  const { currentPlayer, winner, timer, updateTimer, hasGameStarted, players } =
-    useGameStore();
-  const { t } = useTranslation();
+  const { currentPlayer, winner, players } = useGameStore();
+  const { language } = useTranslation();
+  const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
-    if (!winner && hasGameStarted) {
-      const interval = setInterval(() => {
-        updateTimer(currentPlayer);
-      }, 1000);
+    if (winner) return;
 
-      return () => clearInterval(interval);
-    }
-  }, [currentPlayer, winner, hasGameStarted, updateTimer]);
+    const timer = setInterval(() => {
+      setSeconds((prev) => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [winner]);
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
 
   return (
     <div className="flex flex-col items-center gap-4 mb-4">
       <div className="flex rounded-lg bg-neutral/20 p-1">
         <div
           className={`relative flex items-center gap-2 px-6 py-2 rounded-md transition-colors duration-300 ${
-            currentPlayer === "X" && !winner
+            currentPlayer === "X"
               ? "bg-background text-primary"
               : "text-neutral hover:text-primary"
           }`}
@@ -32,7 +40,7 @@ const GameTimer = () => {
           <span className="text-lg font-semibold">
             <span className="text-primary">{players.X}</span>
           </span>
-          <div className="text-lg font-bold">{formatTime(timer.X)}</div>
+          <div className="text-lg font-bold">{formatTime(seconds)}</div>
           {currentPlayer === "X" && !winner && (
             <motion.div
               layoutId="activePlayer"
@@ -42,16 +50,16 @@ const GameTimer = () => {
         </div>
         <div
           className={`relative flex items-center gap-2 px-6 py-2 rounded-md transition-colors duration-300 ${
-            currentPlayer === "O" && !winner
+            currentPlayer === "O"
               ? "bg-background text-secondary"
-              : " hover:text-secondary"
+              : "text-neutral hover:text-secondary"
           }`}
         >
           <span className="text-lg font-semibold">
             <span className="text-secondary">{players.O}</span>
           </span>
           <div className="text-lg font-bold text-secondary">
-            {formatTime(timer.O)}
+            {formatTime(seconds)}
           </div>
           {currentPlayer === "O" && !winner && (
             <motion.div
