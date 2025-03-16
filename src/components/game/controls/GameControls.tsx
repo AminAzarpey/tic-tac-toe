@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useGameStore } from "@tictactoe/store";
 import { useTranslation } from "@tictactoe/hooks";
+import { Player } from "@tictactoe/types";
 
 const GameControls = () => {
   const {

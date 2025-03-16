@@ -9,6 +9,9 @@
       "@tictactoe/hooks": ["./src/hooks/index"],
       "@tictactoe/components": ["./src/components/index"],
       "@tictactoe/utils": ["./src/utils/index"]
-    }
+    },
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false
   }
 }

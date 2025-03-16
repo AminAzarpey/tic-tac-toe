@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import { useGameStore } from "@tictactoe/store";
-import { useTranslation } from "@tictactoe/hooks";
 import { motion } from "framer-motion";
-import { formatTime } from "@tictactoe/utils";
 
 const GameTimer = () => {
   const { currentPlayer, winner, players } = useGameStore();
-  const { language } = useTranslation();
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {

@@ -3,10 +3,12 @@ import { persist } from "zustand/middleware";
 
 type Language = "en" | "fa";
 
+type TranslationKeys = keyof typeof translations.en;
+
 type TranslationStore = {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: TranslationKeys) => string;
 };
 
 const translations = {
@@ -36,6 +38,8 @@ const translations = {
     wins: "wins!",
     draw: "It's a draw!",
     turn: "'s turn",
+    playerXName: "Player X Name",
+    playerOName: "Player O Name",
     cannotChangeGameMode: "Cannot change game mode during a game",
   },
   fa: {
@@ -57,8 +61,8 @@ const translations = {
     light: "حالت روشن",
     gameHistory: "تاریخچه بازی",
     noMoves: "هنوز حرکتی انجام نشده",
-    player: "بازیکن",
-    movedTo: "به موقعیت",
+    move: "حرکت",
+    placedAt: "در موقعیت",
     undo: "برگشت",
     reset: "شروع مجدد",
     wins: "برنده شد!",
@@ -68,16 +72,14 @@ const translations = {
     playerOName: "نام بازیکن O",
     cannotChangeGameMode: "در حین بازی نمی‌توان حالت بازی را تغییر داد",
   },
-};
+} as const;
 
 export const useTranslation = create<TranslationStore>()(
   persist(
     (set, get) => ({
       language: "en",
       setLanguage: (lang) => set({ language: lang }),
-      t: (key) =>
-        translations[get().language][key as keyof typeof translations.en] ||
-        key,
+      t: (key) => translations[get().language][key] || key,
     }),
     {
       name: "language-storage",
