@@ -22,7 +22,7 @@ const PlayerNameInput = ({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white border-2 border-transparent focus:border-primary focus:outline-none text-lg"
+        className="w-full px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white border-2 border-transparent focus:border-primary focus:outline-hidden text-lg"
         required
       />
     </div>

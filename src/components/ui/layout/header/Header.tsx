@@ -116,7 +116,7 @@ const Header = () => {
                     <button
                       key={name}
                       onClick={() => handleColorChange(color)}
-                      className="w-10 h-10 rounded-full transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                      className="w-10 h-10 rounded-full transition-transform hover:scale-110 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                       style={{ backgroundColor: color }}
                       title={name}
                     />
