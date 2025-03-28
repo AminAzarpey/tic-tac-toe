@@ -15,7 +15,7 @@ export const ColorPalette = () => {
         <button
           key={name}
           onClick={() => handleColorChange(color)}
-          className="w-8 h-8 rounded-full transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="w-8 h-8 rounded-full transition-transform hover:scale-110 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           style={{ backgroundColor: color }}
           title={name}
         />

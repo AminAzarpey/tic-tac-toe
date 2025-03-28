@@ -74,7 +74,7 @@ const GameControls = () => {
           value={players.X}
           onChange={(e) => handleNameChange("X", e.target.value)}
           placeholder={t("playerXName")}
-          className="px-4 py-2 rounded-lg bg-neutral/50 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="px-4 py-2 rounded-lg bg-neutral/50 focus:outline-hidden focus:ring-2 focus:ring-primary"
         />
         {gameMode === "1v1" && (
           <input
@@ -82,7 +82,7 @@ const GameControls = () => {
             value={players.O}
             onChange={(e) => handleNameChange("O", e.target.value)}
             placeholder={t("playerOName")}
-            className="px-4 py-2 rounded-lg bg-neutral/50 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="px-4 py-2 rounded-lg bg-neutral/50 focus:outline-hidden focus:ring-2 focus:ring-primary"
           />
         )}
       </div>

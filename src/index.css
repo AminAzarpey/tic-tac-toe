@@ -1,6 +1,24 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@config '../tailwind.config.js';
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 @layer base {
   :root {
@@ -17,28 +35,6 @@
 
   body {
     font-family: "Vazirmatn", sans-serif;
-  }
-}
-
-@layer components {
-  .btn-primary {
-    @apply bg-primary text-white hover:opacity-80 transition-colors;
-  }
-
-  .btn-secondary {
-    @apply bg-secondary text-white hover:opacity-80 transition-colors;
-  }
-
-  .btn-accent {
-    @apply bg-accent text-white hover:opacity-80 transition-colors;
-  }
-
-  .input-primary {
-    @apply border-2 border-transparent focus:border-primary focus:ring-2 focus:ring-opacity-20 focus:ring-primary outline-none;
-  }
-
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent;
   }
 }
 
